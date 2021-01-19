@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <ProjectGuid>82bfe108-2ef8-455d-8816-312ec2839e33</ProjectGuid>
+    <ProjectGuid>3c8c6030-0d55-460d-a875-458ac9eb769b</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
     <DockerServiceName>frontend</DockerServiceName>

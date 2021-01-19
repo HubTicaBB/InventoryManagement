@@ -28,4 +28,3 @@ services:
       - "6101:80"
     depends_on:
       - db
-
