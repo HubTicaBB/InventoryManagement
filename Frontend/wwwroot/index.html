@@ -3,10 +3,70 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="StyleSheet.css">
         <title>Inventory Management</title>
-    </head>
-    <body>
-        <div>Index</div>        
-        <script src="index.js"></script>
-    </body>
+        <body>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                <a class="navbar-brand" href="/">
+                    <i class="fas fa-warehouse"></i>
+                    Inventorify
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarColor01">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/">Manage Inventory</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/orders">Manage Orders</a>
+                        </li>
+                        <li>
+                            
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="container-xl mt-4">
+                <div id="reorder-modal" class="modal">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 id="modal-title" class="modal-title">Modal title</h5>
+                                <button type="button" class="close" onclick="setModalDisplayTo('none', 'reorder-modal')">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div id="modal-body" class="modal-body"></div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary">Submit order</button>
+                                <button class="btn btn-secondary" onclick="setModalDisplayTo('none', 'reorder-modal')">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-hover">
+                    <thead class="bg-light">                        
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Product Name</th>
+                            <th scope="col">Unit Price</th>
+                            <th scope="col">Units in Stock</th>
+                            <th scope="col">Total Price</th>
+                            <th scope="col">
+                                Reorder
+                                <a class="float-right" href="/" title="Refresh the inventory list"><i class="fas fa-sync fa-lg"></i></a>
+                            </th> 
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-tbody"></tbody>
+                </table>
+            </div>
+            <script src="index.js"></script>
+            <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+        </body>
 </html>
