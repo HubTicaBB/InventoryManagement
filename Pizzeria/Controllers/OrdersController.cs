@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Pizzeria_API.Data;
-using Pizzeria_API.Models;
+using Pizzeria.Data;
+using Pizzeria.Models;
 using System;
 using System.Linq;
 
-namespace Pizzeria_API.Controllers
+namespace Pizzeria.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -175,7 +175,7 @@ namespace Pizzeria_API.Controllers
                 return NotFound("No order found");
             }
 
-            if(order.Status!= Status.InProgress)
+            if (order.Status != Status.InProgress)
             {
                 return BadRequest("Your order is not in progress so you can not delete products from it.");
             }

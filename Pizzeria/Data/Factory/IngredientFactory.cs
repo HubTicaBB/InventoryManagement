@@ -1,6 +1,6 @@
-﻿using Pizzeria_API.Models;
+﻿using Pizzeria.Models;
 
-namespace Pizzeria_API.Data.Factory
+namespace Pizzeria.Data.Factory
 {
     public class IngredientFactory : ItemFactory<Ingredient>
     {
@@ -138,3 +138,4 @@ namespace Pizzeria_API.Data.Factory
         }
     }
 }
+

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Pizzeria_API.Models
+namespace Pizzeria.Models
 {
     public abstract class Product
     {
@@ -9,4 +9,3 @@ namespace Pizzeria_API.Models
         public List<Ingredient> Ingredients { get; set; }
     }
 }
- 

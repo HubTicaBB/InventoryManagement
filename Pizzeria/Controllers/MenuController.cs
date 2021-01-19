@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Pizzeria_API.Models;
+using Pizzeria.Models;
 
-namespace Pizzeria_API.Controllers
+namespace Pizzeria.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -23,7 +23,7 @@ namespace Pizzeria_API.Controllers
             {
                 return NotFound();
             }
-          
+
             return Ok(products);
         }
     }

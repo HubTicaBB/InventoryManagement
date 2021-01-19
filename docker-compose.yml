@@ -28,3 +28,12 @@ services:
       - "6101:80"
     depends_on:
       - db
+
+  pizzeria:
+    image: ${DOCKER_REGISTRY-}pizzeria
+    build:
+      context: .
+      dockerfile: Pizzeria/Dockerfile
+    ports:
+      - "6102:80"
+

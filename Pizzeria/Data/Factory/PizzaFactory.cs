@@ -1,23 +1,23 @@
-﻿using Pizzeria_API.Models;
+﻿using Pizzeria.Models;
 using System.Collections.Generic;
 
-namespace Pizzeria_API.Data.Factory
+namespace Pizzeria.Data.Factory
 {
-     class PizzaFactory : ProductFactory
-     {
-       
+    class PizzaFactory : ProductFactory
+    {
+
         protected override Product CreateProduct(string name)
         {
-			switch (name)
-			{
-				case (nameof(Margherita)):
-					{
+            switch (name)
+            {
+                case (nameof(Margherita)):
+                    {
                         return new Margherita();
-					}
-				case (nameof(Hawaii)):
-					{
+                    }
+                case (nameof(Hawaii)):
+                    {
                         return new Hawaii();
-					}
+                    }
                 case (nameof(Kebabpizza)):
                     {
                         return new Kebabpizza();
@@ -28,20 +28,20 @@ namespace Pizzeria_API.Data.Factory
                     }
                 default:
                     {
-						return null;
+                        return null;
                     }
-			}
-		}
-     }
+            }
+        }
+    }
 
     public class Margherita : Product
-    {        
+    {
         public Margherita()
         {
             Name = "Margherita";
             Price = 85;
-            Ingredients = new List<Ingredient>() 
-            { 
+            Ingredients = new List<Ingredient>()
+            {
                 new Ingredient{Name = "cheese", Price = 0},
                 new Ingredient{Name = "tomato sauce", Price = 0}
             };

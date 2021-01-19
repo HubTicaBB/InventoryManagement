@@ -1,6 +1,6 @@
-﻿using Pizzeria_API.Models;
+﻿using Pizzeria.Models;
 
-namespace Pizzeria_API.Data
+namespace Pizzeria.Data
 {
     public class OrderSumCalculator
     {
@@ -38,3 +38,4 @@ namespace Pizzeria_API.Data
         }
     }
 }
+

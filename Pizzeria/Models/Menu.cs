@@ -1,7 +1,7 @@
-﻿using Pizzeria_API.Data.Factory;
+﻿using Pizzeria.Data.Factory;
 using System.Collections.Generic;
 
-namespace Pizzeria_API.Models
+namespace Pizzeria.Models
 {
     public sealed class Menu
     {

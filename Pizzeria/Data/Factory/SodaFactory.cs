@@ -1,6 +1,6 @@
-﻿using Pizzeria_API.Models;
+﻿using Pizzeria.Models;
 
-namespace Pizzeria_API.Data.Factory
+namespace Pizzeria.Data.Factory
 {
     public class SodaFactory : ItemFactory<Soda>
     {
@@ -54,3 +54,4 @@ namespace Pizzeria_API.Data.Factory
     }
 
 }
+

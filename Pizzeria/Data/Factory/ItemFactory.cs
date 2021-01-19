@@ -1,4 +1,4 @@
-﻿namespace Pizzeria_API.Data.Factory
+﻿namespace Pizzeria.Data.Factory
 {
     public abstract class ItemFactory<T>
     {

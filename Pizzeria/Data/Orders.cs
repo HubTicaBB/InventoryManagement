@@ -1,7 +1,7 @@
-﻿using Pizzeria_API.Models;
+﻿using Pizzeria.Models;
 using System.Collections.Generic;
 
-namespace Pizzeria_API.Data
+namespace Pizzeria.Data
 {
     public class Orders
     {
@@ -9,7 +9,7 @@ namespace Pizzeria_API.Data
 
         public List<Order> Queue { get; set; }
 
-        private Orders() 
+        private Orders()
         {
             Queue = new List<Order>();
         }
@@ -19,7 +19,7 @@ namespace Pizzeria_API.Data
             if (_instance is null)
             {
                 _instance = new Orders();
-                
+
             }
 
             return _instance;

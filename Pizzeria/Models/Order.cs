@@ -1,9 +1,9 @@
-﻿using Pizzeria_API.Data;
+﻿using Pizzeria.Data;
 using System.Collections.Generic;
 
-namespace Pizzeria_API.Models
+namespace Pizzeria.Models
 {
-    public enum Status { InProgress, Submitted, Delivered, Cancelled};
+    public enum Status { InProgress, Submitted, Delivered, Cancelled };
 
     public class Order
     {
