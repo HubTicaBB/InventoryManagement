@@ -1,0 +1,31 @@
+version: '3.4'
+
+services:
+  frontend:
+    image: ${DOCKER_REGISTRY-}frontend
+    build:
+      context: .
+      dockerfile: Frontend/Dockerfile
+    ports:
+      - "80:80" 
+    depends_on:
+      - inventoryapi
+
+  db:
+    image: "mcr.microsoft.com/mssql/server:2017-latest"
+    environment:
+        ACCEPT_EULA: "Y"
+        SA_PASSWORD: "Ver1SejfPasv0rd!"
+    ports:
+      - "6100:6100" 
+
+  inventoryapi:
+    image: ${DOCKER_REGISTRY-}inventoryapi
+    build:
+      context: .
+      dockerfile: InventoryAPI/Dockerfile
+    ports:
+      - "6101:80"
+    depends_on:
+      - db
+
