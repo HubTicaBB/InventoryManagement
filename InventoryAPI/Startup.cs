@@ -29,6 +29,13 @@ namespace InventoryAPI
         {
             services.AddDbContext<InventoryDbContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("DbConnection")));
+
+            services.AddCors(options => options.AddDefaultPolicy(builder =>
+            {
+                builder.WithOrigins("http://localhost:*");
+                builder.AllowAnyHeader();
+            }));
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -47,6 +54,8 @@ namespace InventoryAPI
             }
 
             app.UseRouting();
+
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader());
 
             app.UseAuthorization();
 
