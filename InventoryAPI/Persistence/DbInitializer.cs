@@ -106,7 +106,7 @@ namespace InventoryAPI.Persistence
             };
 
             db.Ingredients.AddRange(ingredients);
-            db.SaveChangesAsync();
+            db.SaveChanges();
         }
     }
 }

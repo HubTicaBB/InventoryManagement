@@ -15,7 +15,7 @@ namespace InventoryAPI.Persistence
             Configuration = configuration;
         }
 
-        public virtual DbSet<Ingredient> Ingredients { get; set; }
+        public DbSet<Ingredient> Ingredients { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {

@@ -15,9 +15,9 @@ services:
     image: "mcr.microsoft.com/mssql/server:2017-latest"
     environment:
         ACCEPT_EULA: "Y"
-        SA_PASSWORD: "Ver1SejfPasv0rd!"
+        SA_PASSWORD: "Aork876h1233dDkdi9flp?"
     ports:
-      - "6100:6100" 
+      - "1433:1433" 
 
   inventoryapi:
     image: ${DOCKER_REGISTRY-}inventoryapi

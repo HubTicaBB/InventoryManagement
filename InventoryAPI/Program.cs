@@ -28,8 +28,11 @@ namespace InventoryAPI
             try
             {
                 var db = serviceProvider.GetRequiredService<InventoryDbContext>();
-                db.Database.Migrate();
-                DbInitializer.Seed(db);
+                if (db.Database.IsSqlServer())
+                {
+                    db.Database.Migrate();
+                    DbInitializer.Seed(db);
+                }
             }
             catch (Exception exception)
             {
