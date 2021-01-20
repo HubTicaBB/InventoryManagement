@@ -1,5 +1,5 @@
 ﻿const getIngredients = async () => {
-    await fetch('http://localhost:6101/api/ingredients')
+    await fetch('http://localhost:6101/api/inventory')
         .then(response => {
             if (response.ok) return response.json()
             else console.error(response.status, response.error)

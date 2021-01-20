@@ -14,7 +14,7 @@ namespace InventoryAPI.Controllers
     {
         private readonly InventoryDbContext _context;
 
-        public IngredientsController(InventoryDbContext context)
+        public IngredientsController(InventoryDbContext context)    
         {
             _context = context;
         }

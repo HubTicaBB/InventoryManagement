@@ -1,4 +1,6 @@
 using InventoryAPI.Persistence;
+using InventoryAPI.Repository;
+using InventoryAPI.Repository.IRepository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +37,8 @@ namespace InventoryAPI
                 builder.WithOrigins("http://localhost:*");
                 builder.AllowAnyHeader();
             }));
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
