@@ -20,30 +20,26 @@ const display = (data) => {
         row.insertCell(2).innerHTML = item.unitPrice;
         row.insertCell(3).innerHTML = item.quantityOnStock.toFixed();
         row.insertCell(4).innerHTML = calculateTotal(item).toFixed();
-        row.insertCell(5).innerHTML = getReorderButtons(item);
+        row.insertCell(5).innerHTML = getReorderButton(item);
     });
 }
 
 const calculateTotal = (item) => item.unitPrice * item.quantityOnStock;
 
-const getReorderButtons = (item) => `
-    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-        <button onclick="setReorderModal(${item.id}, '${item.name}', 'Manual')" class="btn btn-outline-primary">
-            <i class="fas fa-dolly"></i>&nbsp; Manual Entry
-        </button>
-        <button onclick="setReorderModal(${item.id}, '${item.name}', 'Bulk')" class="btn btn-outline-primary">
-            <i class="fas fa-dolly-flatbed"></i>&nbsp; Bulk Delivery
-        </button>
-    </div>
+const getReorderButton = (item) => `
+    <button onclick="setReorderModal(${item.id}, '${item.name}')" class="btn btn-outline-primary">
+        <i class="fas fa-dolly"></i>&nbsp; Manual Entry
+    </button>
 `;
 
-const setReorderModal = (id, itemName, orderType) => {
+const setReorderModal = (id, itemName) => {
     setModalDisplayTo('block', 'reorder-modal', id);
-    document.getElementById('modal-title').innerHTML = `${orderType} reorder: # ${id} - ${itemName}`;
 
-    document.getElementById('modal-body').innerHTML = (orderType === 'Manual')
-        ? getManualReorderForm(id)
-        : getBulkReorderForm(id);
+    var modalTitle = document.getElementById('modal-title');
+    modalTitle.innerHTML = `Reordering ${itemName} (Product ID: ${id})`;
+    modalTitle.className = 'text-primary';
+
+    document.getElementById('modal-body').innerHTML = getManualReorderForm(id);
 }
 
 const setModalDisplayTo = (displayValue, id) => {
@@ -90,9 +86,5 @@ const reorder = (id) => {
     setModalDisplayTo('none', 'reorder-modal');
     getIngredients();   
 }
-
-const getBulkReorderForm = (id) => `
-    bulk form ${id}
-`;
 
 getIngredients();
