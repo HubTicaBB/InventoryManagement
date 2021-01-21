@@ -4,6 +4,6 @@ namespace InventoryAPI.Repository.IRepository
 {
     public interface IIngredientRepository : IRepository<Ingredient>
     {
-        void Update(Ingredient ingredient);
+        void Update(IngredientDto ingredient);
     }
 }

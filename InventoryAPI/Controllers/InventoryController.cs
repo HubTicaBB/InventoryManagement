@@ -28,7 +28,7 @@ namespace InventoryAPI.Controllers
         }                                                                                          
            
         [HttpPut]
-        public IActionResult Update(Ingredient ingredient)
+        public IActionResult Update(IngredientDto ingredient)
         {
             _unitOfWork.Ingredient.Update(ingredient);
             return Ok(ingredient);

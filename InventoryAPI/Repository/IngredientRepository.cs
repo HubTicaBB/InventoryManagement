@@ -14,12 +14,12 @@ namespace InventoryAPI.Repository
             _db = db;
         }
                                                                                                                                                                                 
-        public void Update(Ingredient ingredient)
+        public void Update(IngredientDto ingredient)
         {
             var existingIngredient = _db.Ingredients.FirstOrDefault(i => i.Id == ingredient.Id);
             if (existingIngredient is not null)
             {
-                existingIngredient.QuantityOnStock = ingredient.QuantityOnStock;
+                existingIngredient.QuantityOnStock += ingredient.ReorderQuantity;
                 _db.SaveChanges();  
             }
         }

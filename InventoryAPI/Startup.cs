@@ -36,6 +36,7 @@ namespace InventoryAPI
             {
                 builder.WithOrigins("http://localhost:*");
                 builder.AllowAnyHeader();
+                builder.AllowAnyMethod();
             }));
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -59,7 +60,7 @@ namespace InventoryAPI
 
             app.UseRouting();
 
-            app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader());
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
             app.UseAuthorization();
 

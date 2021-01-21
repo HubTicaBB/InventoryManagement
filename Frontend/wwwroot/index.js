@@ -1,5 +1,7 @@
-﻿const getIngredients = async () => {
-    await fetch('http://localhost:6101/api/inventory')
+﻿const endpoint = 'http://localhost:6101/api/inventory';
+
+const getIngredients = async () => {
+    await fetch(endpoint)
         .then(response => {
             if (response.ok) return response.json()
             else console.error(response.status, response.error)
@@ -26,16 +28,16 @@ const calculateTotal = (item) => item.unitPrice * item.quantityOnStock;
 
 const getReorderButtons = (item) => `
     <div class="btn-group btn-group-toggle" data-toggle="buttons">
-        <button onclick="reorder(${item.id}, '${item.name}', 'Manual')" class="btn btn-outline-primary">
+        <button onclick="setReorderModal(${item.id}, '${item.name}', 'Manual')" class="btn btn-outline-primary">
             <i class="fas fa-dolly"></i>&nbsp; Manual Entry
         </button>
-        <button onclick="reorder(${item.id}, '${item.name}', 'Bulk')" class="btn btn-outline-primary">
+        <button onclick="setReorderModal(${item.id}, '${item.name}', 'Bulk')" class="btn btn-outline-primary">
             <i class="fas fa-dolly-flatbed"></i>&nbsp; Bulk Delivery
         </button>
     </div>
 `;
 
-const reorder = (id, itemName, orderType) => {
+const setReorderModal = (id, itemName, orderType) => {
     setModalDisplayTo('block', 'reorder-modal', id);
     document.getElementById('modal-title').innerHTML = `${orderType} reorder: # ${id} - ${itemName}`;
 
@@ -49,18 +51,45 @@ const setModalDisplayTo = (displayValue, id) => {
 }
 
 const getManualReorderForm = (id) => `
-    <div class="form-group">
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text">Enter quantity:</span>
+    <form method="PUT" onsubmit="reorder(${id})" >
+        <div class="form-group">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Enter quantity:</span>
+                </div>
+                <input id="quantity" type="number" class="form-control" min="1">
+                <div class="input-group-append">
+                    <span class="input-group-text">units</span>
+                </div>
+            </div>
         </div>
-        <input type="number" class="form-control" min="1">
-        <div class="input-group-append">
-            <span class="input-group-text">units</span>
+        <div class="modal-footer">
+            <input type="submit" class="btn btn-primary" value="Submit order"></input>
+            <button class="btn btn-secondary" onclick="setModalDisplayTo('none', 'reorder-modal')">
+                Cancel
+            </button>
         </div>
-    </div>
-    </div>
+    </form>
 `;
+
+const reorder = (id) => {
+    const body = {
+        id: id,
+        reorderQuantity: +document.getElementById('quantity').value
+    };
+
+    fetch(endpoint, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    })
+        .then(response => response.json)
+        .then(data => location.href = "/")
+        .catch(error => console.error(error));
+
+    setModalDisplayTo('none', 'reorder-modal');
+    getIngredients();   
+}
 
 const getBulkReorderForm = (id) => `
     bulk form ${id}
