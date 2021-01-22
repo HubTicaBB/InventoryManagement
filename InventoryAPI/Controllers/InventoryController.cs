@@ -11,7 +11,7 @@ namespace InventoryAPI.Controllers
         private readonly IUnitOfWork _unitOfWork;
 
         public InventoryController(IUnitOfWork unitOfWork)
-        {                     
+        {
             _unitOfWork = unitOfWork;
         }
 
@@ -20,13 +20,21 @@ namespace InventoryAPI.Controllers
         {
             var ingredients = _unitOfWork.Ingredient.GetAll();
             return Ok(ingredients);
-        }                                                                                          
-           
+        }
+
         [HttpPut]
-        public IActionResult Update(IngredientDto ingredient)
+        public IActionResult UpdateSingle(IngredientDto ingredient)
         {
-            _unitOfWork.Ingredient.Update(ingredient);
+            _unitOfWork.Ingredient.PlaceManualOrder(ingredient);
             return Ok(ingredient);
+        }
+
+        [HttpPut("bulk")]
+        public IActionResult UpdateMultiple()
+        {
+            var ingredients = _unitOfWork.Ingredient.GetAll();
+            _unitOfWork.Ingredient.PlaceBulkOrder(ingredients);
+            return Ok();
         }
     }
 }

@@ -9,10 +9,7 @@ namespace InventoryAPI.Repository.IRepository
     {
         T Get(int id);
 
-        IEnumerable<T> GetAll(
-            Expression<Func<T, bool>> filter = null,                              
-            Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null
-            );
+        IEnumerable<T> GetAll();
 
         T GetFirstOrDefault(Expression<Func<T, bool>> filter = null);
 

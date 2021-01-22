@@ -29,23 +29,9 @@ namespace InventoryAPI.Repository
             return dbSet.Find(id);
         }
 
-        public IEnumerable<T> GetAll(
-            Expression<Func<T, bool>> filter = null, 
-            Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null)
+        public IEnumerable<T> GetAll()
         {
-            IQueryable<T> query = dbSet;
-
-            if (filter != null)
-            {
-                query = query.Where(filter);
-            }
-
-            if (orderBy != null)
-            {
-                return orderBy(query).ToList();
-            }
-
-            return query.ToList();
+            return dbSet.ToList();
         }
 
         public T GetFirstOrDefault(Expression<Func<T, bool>> filter = null)

@@ -27,19 +27,23 @@ const display = (data) => {
 const calculateTotal = (item) => item.unitPrice * item.quantityOnStock;
 
 const getReorderButton = (item) => `
-    <button onclick="setReorderModal(${item.id}, '${item.name}')" class="btn btn-outline-primary">
-        <i class="fas fa-dolly"></i>&nbsp; Manual Entry
+    <button onclick="setReorderModal(${item.id}, '${item.name}')" class="btn btn-success">
+        <i class="fas fa-dolly"></i>&nbsp; Manual Reorder
     </button>
 `;
 
 const setReorderModal = (id, itemName) => {
     setModalDisplayTo('block', 'reorder-modal', id);
 
-    var modalTitle = document.getElementById('modal-title');
+    var modalTitle = document.getElementById('reorder-modal-title');
     modalTitle.innerHTML = `Reordering ${itemName} (Product ID: ${id})`;
     modalTitle.className = 'text-primary';
 
-    document.getElementById('modal-body').innerHTML = getManualReorderForm(id);
+    document.getElementById('reorder-modal-body').innerHTML = getManualReorderForm(id);
+}
+
+const setBulkOrderModal = () => {
+    setModalDisplayTo('block', 'bulk-order-modal');
 }
 
 const setModalDisplayTo = (displayValue, id) => {
@@ -47,7 +51,7 @@ const setModalDisplayTo = (displayValue, id) => {
 }
 
 const getManualReorderForm = (id) => `
-    <form method="PUT" onsubmit="reorder(${id})" >
+    <form onsubmit="reorder(${id})" >
         <div class="form-group">
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
@@ -68,13 +72,13 @@ const getManualReorderForm = (id) => `
     </form>
 `;
 
-const reorder = (id) => {
+const reorder = async (id) => {
     const body = {
         id: id,
         reorderQuantity: +document.getElementById('quantity').value
     };
 
-    fetch(endpoint, {
+    await fetch(endpoint, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
@@ -85,6 +89,18 @@ const reorder = (id) => {
 
     setModalDisplayTo('none', 'reorder-modal');
     getIngredients();   
+}
+
+const bulkReorder = async () => {
+    await fetch(`${endpoint}/bulk`, {
+        method: 'PUT'
+    })
+        .then(response = response.json)
+        .then(data => console.log(data))
+        .catch(error = console.error(error));
+
+    setModalDisplayTo('none', 'bulk-order-modal');
+    getIngredients();
 }
 
 getIngredients();
