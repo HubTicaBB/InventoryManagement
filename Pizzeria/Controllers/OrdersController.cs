@@ -131,27 +131,35 @@ namespace Pizzeria.Controllers
             return BadRequest($"It's not possible to change status of a {order.Status} order to {status}.");
         }
 
-        // TODO: REFACTOR!!!
         private static IRestResponse UpdateInventory(Order order)
         {
+            var orderIngredients = GetAllIngredientsGroupedByName(order);
+            var requestBody = new { OrderDetails = orderIngredients };
+
             var client = new RestClient("http://inventoryapi:80/api/inventory/consume") { Timeout = -1 };
-            var request = new RestRequest(Method.PUT);
-            request.AddHeader("Content-Type", "application/json");
-
-            List<string> consumedIngredients = new List<string>();
-
-            var ingredientsPerPizza = order.Pizzas.Select(pizza => pizza.Ingredients).ToList();
-            ingredientsPerPizza.ToList().ForEach(pi => pi.ToList().ForEach(i => consumedIngredients.Add(i.Name)));
-            var extraIngredients = order.Ingredients.Select(i => i.Name).ToList();
-            consumedIngredients.AddRange(extraIngredients);
-
-            var consumedWithQuantity = consumedIngredients.GroupBy(name => name).Select(group => new { Name = group.Key, Quantity = group.Count() });
-
-            var body = new { OrderDetails = consumedWithQuantity };
-
-            request.AddParameter("application/json", JsonSerializer.Serialize(body), ParameterType.RequestBody);
+            var request = new RestRequest(Method.PUT)
+                .AddHeader("Content-Type", "application/json")
+                .AddParameter("application/json", JsonSerializer.Serialize(requestBody), ParameterType.RequestBody);
             var response = client.Execute(request);
+
             return response;
+        }
+
+        private static object GetAllIngredientsGroupedByName(Order order)
+        {
+            var orderIngredients = new List<string>();
+
+            var pizzaIngredients = order.Pizzas.Select(pizza => pizza.Ingredients).ToList();
+            pizzaIngredients.ToList()
+                .ForEach(singlePizzaIngredients => singlePizzaIngredients.ToList()
+                .ForEach(ingredient => orderIngredients.Add(ingredient.Name)));
+
+            var extraIngredients = order.Ingredients.Select(i => i.Name).ToList();
+            orderIngredients.AddRange(extraIngredients);
+
+            return orderIngredients
+                .GroupBy(name => name)
+                .Select(group => new { Name = group.Key, Quantity = group.Count() });
         }
 
         private Order GetOrderBy(int? id)
