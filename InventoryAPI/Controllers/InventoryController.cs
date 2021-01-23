@@ -1,6 +1,8 @@
 ﻿using InventoryAPI.Models;
+using InventoryAPI.Models.DTO;
 using InventoryAPI.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace InventoryAPI.Controllers
 {
@@ -23,17 +25,24 @@ namespace InventoryAPI.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateSingle(IngredientDto ingredient)
+        public IActionResult IncreaseQuantity(IngredientDto ingredient)
         {
             _unitOfWork.Ingredient.PlaceManualOrder(ingredient);
             return Ok(ingredient);
         }
 
         [HttpPut("bulk")]
-        public IActionResult UpdateMultiple()
+        public IActionResult IncreaseMultipleQuantity()
         {
             var ingredients = _unitOfWork.Ingredient.GetAll();
             _unitOfWork.Ingredient.PlaceBulkOrder(ingredients);
+            return Ok();
+        }
+
+        [HttpPut("consume")]
+        public IActionResult DecreaseQuantity(OrderDto order)
+        {  
+            // TODO: Implement
             return Ok();
         }
     }

@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Pizzeria.Data;
 using Pizzeria.Models;
+using RestSharp;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Text.Json;
 
 namespace Pizzeria.Controllers
 {
@@ -94,6 +98,7 @@ namespace Pizzeria.Controllers
             return BadRequest($"It is not possible to change the status of a {order.Status.ToString().ToLower()} order to submitted.");
         }
 
+        // TODO: REFACTOR!!!
         [HttpPut("{id}/status={status}")]
         public IActionResult ChangeOrderStatus(int id, string status)
         {
@@ -106,9 +111,17 @@ namespace Pizzeria.Controllers
             if (order.Status == Status.Submitted)
             {
                 if (Enum.TryParse(status, true, out Status newStatus))
-                {
-                    order.Status = newStatus;
-                    return Ok(order);
+                {                    
+                    if (newStatus == Status.Delivered)
+                    {
+                        var responseStatus = UpdateInventory(order).StatusCode;
+                        if (responseStatus == HttpStatusCode.OK )
+                        {
+                            order.Status = Status.Delivered;
+                            return Ok(order);
+                        }
+                    };
+                    return BadRequest("Something went wrong, the order has not been delivered!");
                 }
                 else
                 {
@@ -116,6 +129,29 @@ namespace Pizzeria.Controllers
                 }
             }
             return BadRequest($"It's not possible to change status of a {order.Status} order to {status}.");
+        }
+
+        // TODO: REFACTOR!!!
+        private static IRestResponse UpdateInventory(Order order)
+        {
+            var client = new RestClient("http://inventoryapi:80/api/inventory/consume") { Timeout = -1 };
+            var request = new RestRequest(Method.PUT);
+            request.AddHeader("Content-Type", "application/json");
+
+            List<string> consumedIngredients = new List<string>();
+
+            var ingredientsPerPizza = order.Pizzas.Select(pizza => pizza.Ingredients).ToList();
+            ingredientsPerPizza.ToList().ForEach(pi => pi.ToList().ForEach(i => consumedIngredients.Add(i.Name)));
+            var extraIngredients = order.Ingredients.Select(i => i.Name).ToList();
+            consumedIngredients.AddRange(extraIngredients);
+
+            var consumedWithQuantity = consumedIngredients.GroupBy(name => name).Select(group => new { Name = group.Key, Quantity = group.Count() });
+
+            var body = new { OrderDetails = consumedWithQuantity };
+
+            request.AddParameter("application/json", JsonSerializer.Serialize(body), ParameterType.RequestBody);
+            var response = client.Execute(request);
+            return response;
         }
 
         private Order GetOrderBy(int? id)
