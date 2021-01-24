@@ -4,6 +4,6 @@ namespace InventoryAPI.Models.DTO
 {
     public class OrderDto
     {
-        public IEnumerable<OrderDetails> OrderDetails { get; set; }
+        public IEnumerable<OrderItem> OrderItems { get; set; }
     }
 }

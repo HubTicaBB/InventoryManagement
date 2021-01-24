@@ -8,5 +8,9 @@ namespace InventoryAPI.Repository.IRepository
         void PlaceManualOrder(IngredientDto ingredient);
 
         void PlaceBulkOrder(IEnumerable<Ingredient> ingredients);
+
+        void ReduceStockUnits(IngredientDto ingredient);
+
+        int GetId(string name);
     }
 }

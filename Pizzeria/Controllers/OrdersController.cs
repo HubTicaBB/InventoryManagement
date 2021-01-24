@@ -98,7 +98,6 @@ namespace Pizzeria.Controllers
             return BadRequest($"It is not possible to change the status of a {order.Status.ToString().ToLower()} order to submitted.");
         }
 
-        // TODO: REFACTOR!!!
         [HttpPut("{id}/status={status}")]
         public IActionResult ChangeOrderStatus(int id, string status)
         {
@@ -134,7 +133,7 @@ namespace Pizzeria.Controllers
         private static IRestResponse UpdateInventory(Order order)
         {
             var orderIngredients = GetAllIngredientsGroupedByName(order);
-            var requestBody = new { OrderDetails = orderIngredients };
+            var requestBody = new { OrderItems = orderIngredients };
 
             var client = new RestClient("http://inventoryapi:80/api/inventory/consume") { Timeout = -1 };
             var request = new RestRequest(Method.PUT)

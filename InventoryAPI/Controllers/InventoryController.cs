@@ -41,8 +41,14 @@ namespace InventoryAPI.Controllers
 
         [HttpPut("consume")]
         public IActionResult DecreaseQuantity(OrderDto order)
-        {  
-            // TODO: Implement
+        {
+            foreach (var orderItem in order.OrderItems)
+            {
+                var ingredientId = _unitOfWork.Ingredient.GetId(orderItem.Name);
+                _unitOfWork.Ingredient.ReduceStockUnits(
+                    new IngredientDto { Id = ingredientId, ReorderQuantity = orderItem.Quantity }
+                );
+            }
             return Ok();
         }
     }

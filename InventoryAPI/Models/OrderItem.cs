@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace InventoryAPI.Models
 {
-    public class OrderDetails
+    public class OrderItem
     {
         public string Name { get; set; }
         public int Quantity { get; set; }

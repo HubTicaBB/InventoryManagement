@@ -28,8 +28,8 @@ namespace InventoryAPI.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("QuantityOnStock")
-                        .HasColumnType("float");
+                    b.Property<int>("QuantityOnStock")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("UnitPrice")
                         .HasColumnType("decimal(18,2)");
