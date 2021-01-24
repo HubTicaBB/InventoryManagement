@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
 
-namespace Tests
+namespace UnitTests
 {
     [TestClass]
     public class InventoryTests

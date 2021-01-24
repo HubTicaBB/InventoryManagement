@@ -56,13 +56,13 @@ namespace Pizzeria.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateOrder([FromBody] string productName)
+        public IActionResult CreateOrder([FromQuery] string productName)
         {
             return CreateOrUpdateOrder(productName);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateOrder(int id, [FromQuery] string action, [FromBody] string productName)
+        public IActionResult UpdateOrder(int id, [FromQuery] string action, [FromQuery] string productName)
         {
             switch (action)
             {
