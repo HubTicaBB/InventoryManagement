@@ -27,6 +27,7 @@ const display = (data) => {
 
         let quantityCelll = row.insertCell(3);
         quantityCelll.id = `${item.name}-quantity`;
+        quantityCelll.value = item.quantityOnStock;
         quantityCelll.innerHTML = item.quantityOnStock;
         quantityCelll.className = 'text-right';
 
@@ -43,7 +44,7 @@ const display = (data) => {
 const calculateTotal = (item) => item.unitPrice * item.quantityOnStock;
 
 const getReorderButton = (item) => `
-    <button onclick="setReorderModal(${item.id}, '${item.name}')" class="btn btn-success">
+    <button id="${item.name}-reorder-btn" onclick="setReorderModal(${item.id}, '${item.name}')" class="btn btn-success">
         <i class="fas fa-dolly"></i>&nbsp; Manual Reorder
     </button>
 `;
@@ -80,7 +81,7 @@ const getManualReorderForm = (id) => `
             </div>
         </div>
         <div class="modal-footer">
-            <input type="submit" class="btn btn-primary" value="Submit order"></input>
+            <input id="submit-manual-order-btn" type="submit" class="btn btn-primary" value="Submit order"></input>
             <button class="btn btn-secondary" onclick="setModalDisplayTo('none', 'reorder-modal')">
                 Cancel
             </button>
