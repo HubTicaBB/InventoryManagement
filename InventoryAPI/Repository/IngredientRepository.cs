@@ -6,14 +6,16 @@ using System.Linq;
 
 namespace InventoryAPI.Repository
 {                                 
-    public class IngredientRepository : Repository<Ingredient>, IIngredientRepository
+    public class IngredientRepository : IIngredientRepository
     {                                                                          
         private readonly InventoryDbContext _db;
 
-        public IngredientRepository(InventoryDbContext db) : base(db)                      
+        public IngredientRepository(InventoryDbContext db)                
         {
             _db = db;
         }
+
+        public IEnumerable<Ingredient> GetAll() => _db.Ingredients.ToList();
 
         public void PlaceManualOrder(IngredientDto ingredient)
         {

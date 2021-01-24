@@ -3,8 +3,10 @@ using System.Collections.Generic;
 
 namespace InventoryAPI.Repository.IRepository
 {
-    public interface IIngredientRepository : IRepository<Ingredient>
+    public interface IIngredientRepository
     {
+        IEnumerable<Ingredient> GetAll();
+
         void PlaceManualOrder(IngredientDto ingredient);
 
         void PlaceBulkOrder(IEnumerable<Ingredient> ingredients);
