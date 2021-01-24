@@ -1,0 +1,22 @@
+{
+  "name": "e2etests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HubTicaBB/InventoryManagement.git"
+  },
+  "author": "TicaBB",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HubTicaBB/InventoryManagement/issues"
+  },
+  "homepage": "https://github.com/HubTicaBB/InventoryManagement#readme",
+  "devDependencies": {
+    "cypress": "^6.3.0"
+  }
+}
