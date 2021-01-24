@@ -9,6 +9,10 @@ namespace InventoryAPI.Repository.IRepository
 
         void PlaceBulkOrder(IEnumerable<Ingredient> ingredients);
 
+        bool CheckIfAllOnStock(IEnumerable<OrderItem> orderItems);
+
+        bool IsOutOfStock(IngredientDto ingredient);
+
         void ReduceStockUnits(IngredientDto ingredient);
 
         int GetId(string name);

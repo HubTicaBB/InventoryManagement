@@ -37,6 +37,26 @@ namespace InventoryAPI.Repository
             .Where(i => i.Name == name)
             .Select(p => p.Id).FirstOrDefault();
 
+        public bool CheckIfAllOnStock(IEnumerable<OrderItem> orderItems)
+        {
+            foreach (var item in orderItems)
+            {
+                var ingredientId = GetId(item.Name);
+                var ingredient = new IngredientDto { Id = ingredientId, ReorderQuantity = item.Quantity };
+                if (IsOutOfStock(ingredient))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public bool IsOutOfStock(IngredientDto ingredient)
+        {
+            var existingIngredient = GetIngredient(ingredient.Id);
+            return (existingIngredient.QuantityOnStock < ingredient.ReorderQuantity);
+        }
+
         public void ReduceStockUnits(IngredientDto ingredient)
         {
             var existingIngredient = GetIngredient(ingredient.Id);

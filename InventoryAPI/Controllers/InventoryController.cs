@@ -3,6 +3,7 @@ using InventoryAPI.Models.DTO;
 using InventoryAPI.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace InventoryAPI.Controllers
 {
@@ -42,14 +43,25 @@ namespace InventoryAPI.Controllers
         [HttpPut("consume")]
         public IActionResult DecreaseQuantity(OrderDto order)
         {
-            foreach (var orderItem in order.OrderItems)
+            var allOnStock = _unitOfWork.Ingredient.CheckIfAllOnStock(order.OrderItems);
+
+            if (allOnStock)
             {
-                var ingredientId = _unitOfWork.Ingredient.GetId(orderItem.Name);
-                _unitOfWork.Ingredient.ReduceStockUnits(
-                    new IngredientDto { Id = ingredientId, ReorderQuantity = orderItem.Quantity }
-                );
+                order.OrderItems.ToList().ForEach(item =>
+                {
+                    var ingredientId = _unitOfWork.Ingredient.GetId(item.Name);
+                    var ingredient = new IngredientDto { Id = ingredientId, ReorderQuantity = item.Quantity };
+
+                    _unitOfWork.Ingredient.ReduceStockUnits(
+                        new IngredientDto { Id = ingredientId, ReorderQuantity = item.Quantity }
+                     );
+                });
+                return Ok();
             }
-            return Ok();
+            else
+            {
+                return BadRequest("The order cannot be processed as some ingredients are out of stock.");
+            }
         }
     }
 }
