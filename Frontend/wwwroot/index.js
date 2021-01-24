@@ -17,10 +17,22 @@ const display = (data) => {
         let row = tbody.insertRow();
         row.insertCell(0).innerHTML = item.id;
         row.insertCell(1).innerHTML = item.name;
-        row.insertCell(2).innerHTML = item.unitPrice;
-        row.insertCell(3).innerHTML = item.quantityOnStock.toFixed();
-        row.insertCell(4).innerHTML = calculateTotal(item).toFixed();
-        row.insertCell(5).innerHTML = getReorderButton(item);
+
+        let priceCell = row.insertCell(2);
+        priceCell.innerHTML = item.unitPrice.toLocaleString('se', { minimumFractionDigits: 2 }) + '&nbsp;&nbsp;  SEK';
+        priceCell.className = 'text-right';
+
+        let quantityCelll = row.insertCell(3);
+        quantityCelll.innerHTML = item.quantityOnStock;
+        quantityCelll.className = 'text-right';
+
+        let totalPriceCell = row.insertCell(4);
+        totalPriceCell.innerHTML = calculateTotal(item).toLocaleString('se', { minimumFractionDigits: 2 }) + '&nbsp;&nbsp;  SEK';
+        totalPriceCell.className = 'text-right';
+
+        let reorderCell = row.insertCell(5);
+        reorderCell.innerHTML = getReorderButton(item);
+        reorderCell.className = 'text-center';
     });
 }
 
