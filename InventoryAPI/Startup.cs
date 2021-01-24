@@ -39,7 +39,7 @@ namespace InventoryAPI
                 builder.AllowAnyMethod();
             }));
 
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IIngredientRepository, IngredientRepository>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

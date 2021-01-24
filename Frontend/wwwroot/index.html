@@ -5,8 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="StyleSheet.css">
         <title>Inventory Management</title>
-        <body>
-            <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container-xl">
                 <a class="navbar-brand" href="/">
                     <i class="fas fa-warehouse"></i>
                     Inventorify
@@ -21,46 +23,71 @@
                             <a class="nav-link" href="/">Manage Inventory</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/orders">Manage Orders</a>
-                        </li>
-                        <li>
-                            
+
                         </li>
                     </ul>
+                    <button class="btn btn-success my-2 my-sm-0" onclick="setBulkOrderModal()">
+                        <i class="fas fa-dolly-flatbed"></i>&nbsp; Bulk Reorder
+                    </button>&nbsp;
+                    <a class="btn btn-secondary my-2 my-sm-0" href="/" title="Refresh the inventory list"><i class="fas fa-sync"></i>&nbsp; Refresh List</a>
                 </div>
-            </nav>
-            <div class="container-xl mt-4">
-                <div id="reorder-modal" class="modal">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 id="modal-title" class="modal-title">Modal title</h5>
-                                <button type="button" class="close" onclick="setModalDisplayTo('none', 'reorder-modal')">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div id="modal-body" class="modal-body"></div>
+            </div>
+        </nav>
+        <div class="container-xl mt-3">
+            <div id="reorder-modal" class="modal">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 id="reorder-modal-title" class="modal-title"></h5>
+                            <button type="button" class="close" onclick="setModalDisplayTo('none', 'reorder-modal')">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div id="reorder-modal-body" class="modal-body"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="bulk-order-modal" class="modal">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-primary">Bulk Reordering</h5>
+                            <button type="button" class="close" onclick="setModalDisplayTo('none', 'bulk-order-modal')">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div id="bulk-order-modal-body" class="modal-body">
+                            <form onsubmit="bulkReorder()">
+                                <div class="form-group">
+                                    <label class="form-label">Order 10 units of each ingredient</label>
+                                    <input type="text" readonly="" class="form-control" id="quantity" value="10" hidden />
+                                </div>
+                                <div class="modal-footer">
+                                    <input type="submit" class="btn btn-primary" value="Submit order" />
+                                    <button class="btn btn-secondary" onclick="setModalDisplayTo('none', 'bulk-order-modal')">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
-                <table class="table table-hover">
-                    <thead class="bg-light">                        
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Product Name</th>
-                            <th scope="col">Unit Price</th>
-                            <th scope="col">Units in Stock</th>
-                            <th scope="col">Total Price</th>
-                            <th scope="col">
-                                Reorder
-                                <a class="float-right" href="/" title="Refresh the inventory list"><i class="fas fa-sync fa-lg"></i></a>
-                            </th> 
-                        </tr>
-                    </thead>
-                    <tbody id="inventory-tbody"></tbody>
-                </table>
             </div>
-            <script src="index.js"></script>
-            <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-        </body>
+            <table class="table table-hover">
+                <thead class="bg-light">
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Product Name</th>
+                        <th scope="col" class="text-right">Unit Price</th>
+                        <th scope="col" class="text-right">Units in Stock</th>
+                        <th scope="col" class="text-right">Total Price</th>
+                        <th scope="col" class="text-center">Reorder</th>
+                    </tr>
+                </thead>
+                <tbody id="inventory-tbody"></tbody>
+            </table>
+        </div>
+        <script src="index.js"></script>
+        <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    </body>
 </html>

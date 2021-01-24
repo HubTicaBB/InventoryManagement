@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Pizzeria.Data;
 using Pizzeria.Models;
+using RestSharp;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Text.Json;
 
 namespace Pizzeria.Controllers
 {
@@ -106,9 +110,17 @@ namespace Pizzeria.Controllers
             if (order.Status == Status.Submitted)
             {
                 if (Enum.TryParse(status, true, out Status newStatus))
-                {
-                    order.Status = newStatus;
-                    return Ok(order);
+                {                    
+                    if (newStatus == Status.Delivered)
+                    {
+                        var responseStatus = UpdateInventory(order).StatusCode;
+                        if (responseStatus == HttpStatusCode.OK )
+                        {
+                            order.Status = Status.Delivered;
+                            return Ok(order);
+                        }
+                    };
+                    return BadRequest("Something went wrong, the order has not been delivered!");
                 }
                 else
                 {
@@ -116,6 +128,37 @@ namespace Pizzeria.Controllers
                 }
             }
             return BadRequest($"It's not possible to change status of a {order.Status} order to {status}.");
+        }
+
+        private static IRestResponse UpdateInventory(Order order)
+        {
+            var orderIngredients = GetAllIngredientsGroupedByName(order);
+            var requestBody = new { OrderItems = orderIngredients };
+
+            var client = new RestClient("http://inventoryapi:80/api/inventory/consume") { Timeout = -1 };
+            var request = new RestRequest(Method.PUT)
+                .AddHeader("Content-Type", "application/json")
+                .AddParameter("application/json", JsonSerializer.Serialize(requestBody), ParameterType.RequestBody);
+            var response = client.Execute(request);
+
+            return response;
+        }
+
+        private static object GetAllIngredientsGroupedByName(Order order)
+        {
+            var orderIngredients = new List<string>();
+
+            var pizzaIngredients = order.Pizzas.Select(pizza => pizza.Ingredients).ToList();
+            pizzaIngredients.ToList()
+                .ForEach(singlePizzaIngredients => singlePizzaIngredients.ToList()
+                .ForEach(ingredient => orderIngredients.Add(ingredient.Name)));
+
+            var extraIngredients = order.Ingredients.Select(i => i.Name).ToList();
+            orderIngredients.AddRange(extraIngredients);
+
+            return orderIngredients
+                .GroupBy(name => name)
+                .Select(group => new { Name = group.Key, Quantity = group.Count() });
         }
 
         private Order GetOrderBy(int? id)

@@ -17,33 +17,45 @@ const display = (data) => {
         let row = tbody.insertRow();
         row.insertCell(0).innerHTML = item.id;
         row.insertCell(1).innerHTML = item.name;
-        row.insertCell(2).innerHTML = item.unitPrice;
-        row.insertCell(3).innerHTML = item.quantityOnStock.toFixed();
-        row.insertCell(4).innerHTML = calculateTotal(item).toFixed();
-        row.insertCell(5).innerHTML = getReorderButtons(item);
+
+        let priceCell = row.insertCell(2);
+        priceCell.innerHTML = item.unitPrice.toLocaleString('se', { minimumFractionDigits: 2 }) + '&nbsp;&nbsp;  SEK';
+        priceCell.className = 'text-right';
+
+        let quantityCelll = row.insertCell(3);
+        quantityCelll.innerHTML = item.quantityOnStock;
+        quantityCelll.className = 'text-right';
+
+        let totalPriceCell = row.insertCell(4);
+        totalPriceCell.innerHTML = calculateTotal(item).toLocaleString('se', { minimumFractionDigits: 2 }) + '&nbsp;&nbsp;  SEK';
+        totalPriceCell.className = 'text-right';
+
+        let reorderCell = row.insertCell(5);
+        reorderCell.innerHTML = getReorderButton(item);
+        reorderCell.className = 'text-center';
     });
 }
 
 const calculateTotal = (item) => item.unitPrice * item.quantityOnStock;
 
-const getReorderButtons = (item) => `
-    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-        <button onclick="setReorderModal(${item.id}, '${item.name}', 'Manual')" class="btn btn-outline-primary">
-            <i class="fas fa-dolly"></i>&nbsp; Manual Entry
-        </button>
-        <button onclick="setReorderModal(${item.id}, '${item.name}', 'Bulk')" class="btn btn-outline-primary">
-            <i class="fas fa-dolly-flatbed"></i>&nbsp; Bulk Delivery
-        </button>
-    </div>
+const getReorderButton = (item) => `
+    <button onclick="setReorderModal(${item.id}, '${item.name}')" class="btn btn-success">
+        <i class="fas fa-dolly"></i>&nbsp; Manual Reorder
+    </button>
 `;
 
-const setReorderModal = (id, itemName, orderType) => {
+const setReorderModal = (id, itemName) => {
     setModalDisplayTo('block', 'reorder-modal', id);
-    document.getElementById('modal-title').innerHTML = `${orderType} reorder: # ${id} - ${itemName}`;
 
-    document.getElementById('modal-body').innerHTML = (orderType === 'Manual')
-        ? getManualReorderForm(id)
-        : getBulkReorderForm(id);
+    var modalTitle = document.getElementById('reorder-modal-title');
+    modalTitle.innerHTML = `Reordering ${itemName} (Product ID: ${id})`;
+    modalTitle.className = 'text-primary';
+
+    document.getElementById('reorder-modal-body').innerHTML = getManualReorderForm(id);
+}
+
+const setBulkOrderModal = () => {
+    setModalDisplayTo('block', 'bulk-order-modal');
 }
 
 const setModalDisplayTo = (displayValue, id) => {
@@ -51,7 +63,7 @@ const setModalDisplayTo = (displayValue, id) => {
 }
 
 const getManualReorderForm = (id) => `
-    <form method="PUT" onsubmit="reorder(${id})" >
+    <form onsubmit="reorder(${id})" action="javascript:void(0);" >
         <div class="form-group">
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
@@ -72,13 +84,13 @@ const getManualReorderForm = (id) => `
     </form>
 `;
 
-const reorder = (id) => {
+const reorder = async (id) => {
     const body = {
         id: id,
         reorderQuantity: +document.getElementById('quantity').value
     };
 
-    fetch(endpoint, {
+    await fetch(endpoint, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
@@ -88,11 +100,21 @@ const reorder = (id) => {
         .catch(error => console.error(error));
 
     setModalDisplayTo('none', 'reorder-modal');
-    getIngredients();   
+    await getIngredients();   
 }
 
-const getBulkReorderForm = (id) => `
-    bulk form ${id}
-`;
+const bulkReorder = async () => {
+    await fetch(`${endpoint}/bulk`, {
+        method: 'PUT'
+    })
+        .then(response = response.json)
+        .then(data => console.log(data))
+        .catch(error = console.error(error));
 
-getIngredients();
+    setModalDisplayTo('none', 'bulk-order-modal');
+    await getIngredients();
+}
+
+window.onload = async () => {
+    setTimeout(await getIngredients, 100);
+}
