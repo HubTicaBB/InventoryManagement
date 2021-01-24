@@ -2,8 +2,6 @@
 using InventoryAPI.Models.DTO;
 using InventoryAPI.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace InventoryAPI.Controllers
 {
@@ -11,37 +9,39 @@ namespace InventoryAPI.Controllers
     [ApiController]
     public class InventoryController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IIngredientRepository _ingredientRepository;
 
-        public InventoryController(IUnitOfWork unitOfWork)
+        public InventoryController(IIngredientRepository ingredientRepository)
         {
-            _unitOfWork = unitOfWork;
+            _ingredientRepository = ingredientRepository;
         }
 
         [HttpGet]
         public IActionResult GetAll()
         {
-            var ingredients = _unitOfWork.Ingredient.GetAll();
+            var ingredients = _ingredientRepository.GetAll();
             return Ok(ingredients);
         }
 
         [HttpPut]
         public IActionResult IncreaseQuantity(IngredientDto ingredient)
         {
-            var actionResult = _unitOfWork.Ingredient.PlaceManualOrder(ingredient);
+            var actionResult = _ingredientRepository.PlaceManualOrder(ingredient);
             return actionResult;
         }           
 
         [HttpPut("bulk")]
         public IActionResult IncreaseMultipleQuantity()
         {
-            return _unitOfWork.Ingredient.PlaceBulkOrder();
+            var actionResult = _ingredientRepository.PlaceBulkOrder();
+            return actionResult;
         }
 
         [HttpPut("consume")]
         public IActionResult DecreaseQuantity(OrderDto order)
         {
-            return _unitOfWork.Ingredient.ConsumeIngredients(order.OrderItems);
+            var actionResult = _ingredientRepository.ConsumeIngredients(order.OrderItems);
+            return actionResult;
         }
     }
 }
