@@ -4,7 +4,13 @@ describe('Order pizza using Pizzeria API', () => {
 
     let orderId = 0;
     const pizza = 'Margherita';
-    let extras = ['Shrimps', 'Shrimps', 'Mussels', 'Coriander'];
+    const extras = ['Shrimps', 'Shrimps', 'Mussels', 'Coriander'];
+
+    let cheeseInitialQuantity = 0;
+    let tomatoSauceInitialQuality = 0;
+    let shrimpsInitialQuantity = 0;
+    let musselsInitialQuality = 0;
+    let corianderInitialQuantity = 0;
 
     it('Open the application', () => {
         cy.visit('http://localhost:49178');

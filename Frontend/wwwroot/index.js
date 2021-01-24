@@ -16,13 +16,17 @@ const display = (data) => {
     data.forEach(item => {
         let row = tbody.insertRow();
         row.insertCell(0).innerHTML = item.id;
-        row.insertCell(1).innerHTML = item.name;
+
+        let nameCell = row.insertCell(1); row.insertCell(1);
+        nameCell.id = item.name;
+        nameCell.innerHTML = item.name;
 
         let priceCell = row.insertCell(2);
         priceCell.innerHTML = item.unitPrice.toLocaleString('se', { minimumFractionDigits: 2 }) + '&nbsp;&nbsp;  SEK';
         priceCell.className = 'text-right';
 
         let quantityCelll = row.insertCell(3);
+        quantityCelll.id = `${item.name}-quantity`;
         quantityCelll.innerHTML = item.quantityOnStock;
         quantityCelll.className = 'text-right';
 
