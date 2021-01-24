@@ -63,7 +63,7 @@ const setModalDisplayTo = (displayValue, id) => {
 }
 
 const getManualReorderForm = (id) => `
-    <form onsubmit="reorder(${id})" >
+    <form onsubmit="reorder(${id})" action="javascript:void(0);" >
         <div class="form-group">
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
@@ -100,7 +100,7 @@ const reorder = async (id) => {
         .catch(error => console.error(error));
 
     setModalDisplayTo('none', 'reorder-modal');
-    getIngredients();   
+    await getIngredients();   
 }
 
 const bulkReorder = async () => {
@@ -112,7 +112,9 @@ const bulkReorder = async () => {
         .catch(error = console.error(error));
 
     setModalDisplayTo('none', 'bulk-order-modal');
-    getIngredients();
+    await getIngredients();
 }
 
-getIngredients();
+window.onload = async () => {
+    setTimeout(await getIngredients, 1000);
+}
