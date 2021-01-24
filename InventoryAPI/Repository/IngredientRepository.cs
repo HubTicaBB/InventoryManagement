@@ -1,12 +1,13 @@
 ﻿using InventoryAPI.Models;
 using InventoryAPI.Persistence;
 using InventoryAPI.Repository.IRepository;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace InventoryAPI.Repository
 {                                 
-    public class IngredientRepository : IIngredientRepository
+    public class IngredientRepository : ControllerBase, IIngredientRepository
     {                                                                          
         private readonly InventoryDbContext _db;
 
@@ -17,29 +18,34 @@ namespace InventoryAPI.Repository
 
         public IEnumerable<Ingredient> GetAll() => _db.Ingredients.ToList();
 
-        public void PlaceManualOrder(IngredientDto ingredient)
+        public IActionResult PlaceManualOrder(IngredientDto ingredient)
         {
             var existingIngredient = _db.Ingredients.FirstOrDefault(i => i.Id == ingredient.Id);
-            if (existingIngredient is not null)
+            if (existingIngredient is null)
             {
-                existingIngredient.QuantityOnStock += ingredient.ReorderQuantity;
-                _db.SaveChanges();
+                return NotFound();
             }
+            existingIngredient.QuantityOnStock += ingredient.ReorderQuantity;
+            _db.SaveChanges();
+            return Ok();
         }
 
-        public void PlaceBulkOrder(IEnumerable<Ingredient> ingredients)
+        public IActionResult PlaceBulkOrder()
         {
-            ingredients.ToList().ForEach(ingredient => 
+            var allIngredients = GetAll();
+            allIngredients.ToList().ForEach(ingredient => 
             {
-                PlaceManualOrder(new IngredientDto() { Id = ingredient.Id, ReorderQuantity = 10 });
+                ingredient.QuantityOnStock += 10;
+                _db.SaveChanges();                
             });
+            return Ok();
         }
 
-        public int GetId(string name) => _db.Ingredients
+        private int GetId(string name) => _db.Ingredients
             .Where(i => i.Name == name)
             .Select(p => p.Id).FirstOrDefault();
 
-        public bool CheckIfAllOnStock(IEnumerable<OrderItem> orderItems)
+        private bool CheckIfAllOnStock(IEnumerable<OrderItem> orderItems)
         {
             foreach (var item in orderItems)
             {
@@ -53,13 +59,31 @@ namespace InventoryAPI.Repository
             return true;
         }
 
-        public bool IsOutOfStock(IngredientDto ingredient)
+        private bool IsOutOfStock(IngredientDto ingredient)
         {
             var existingIngredient = GetIngredient(ingredient.Id);
             return (existingIngredient.QuantityOnStock < ingredient.ReorderQuantity);
         }
 
-        public void ReduceStockUnits(IngredientDto ingredient)
+        public IActionResult ConsumeIngredients(IEnumerable<OrderItem> orderItems)
+        {
+            var allOnStock = CheckIfAllOnStock(orderItems);
+
+            if (allOnStock)
+            {
+                orderItems.ToList().ForEach(item =>
+                {
+                    var ingredientId = GetId(item.Name);
+                    var ingredient = new IngredientDto { Id = ingredientId, ReorderQuantity = item.Quantity };
+
+                    ReduceStockUnits(new IngredientDto { Id = ingredientId, ReorderQuantity = item.Quantity });
+                });
+                return Ok(orderItems);
+            }
+            return BadRequest("The order cannot be processed as some ingredients are out of stock.");
+        }
+
+        private void ReduceStockUnits(IngredientDto ingredient)
         {
             var existingIngredient = GetIngredient(ingredient.Id);
             if (existingIngredient is not null)

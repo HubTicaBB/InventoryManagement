@@ -1,4 +1,5 @@
 ﻿using InventoryAPI.Models;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
 namespace InventoryAPI.Repository.IRepository
@@ -7,16 +8,10 @@ namespace InventoryAPI.Repository.IRepository
     {
         IEnumerable<Ingredient> GetAll();
 
-        void PlaceManualOrder(IngredientDto ingredient);
+        IActionResult PlaceManualOrder(IngredientDto ingredient);
 
-        void PlaceBulkOrder(IEnumerable<Ingredient> ingredients);
+        IActionResult PlaceBulkOrder();
 
-        bool CheckIfAllOnStock(IEnumerable<OrderItem> orderItems);
-
-        bool IsOutOfStock(IngredientDto ingredient);
-
-        void ReduceStockUnits(IngredientDto ingredient);
-
-        int GetId(string name);
+        IActionResult ConsumeIngredients(IEnumerable<OrderItem> orderItems);
     }
 }

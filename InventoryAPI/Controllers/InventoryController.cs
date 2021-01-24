@@ -28,40 +28,20 @@ namespace InventoryAPI.Controllers
         [HttpPut]
         public IActionResult IncreaseQuantity(IngredientDto ingredient)
         {
-            _unitOfWork.Ingredient.PlaceManualOrder(ingredient);
-            return Ok(ingredient);
-        }
+            var actionResult = _unitOfWork.Ingredient.PlaceManualOrder(ingredient);
+            return actionResult;
+        }           
 
         [HttpPut("bulk")]
         public IActionResult IncreaseMultipleQuantity()
         {
-            var ingredients = _unitOfWork.Ingredient.GetAll();
-            _unitOfWork.Ingredient.PlaceBulkOrder(ingredients);
-            return Ok();
+            return _unitOfWork.Ingredient.PlaceBulkOrder();
         }
 
         [HttpPut("consume")]
         public IActionResult DecreaseQuantity(OrderDto order)
         {
-            var allOnStock = _unitOfWork.Ingredient.CheckIfAllOnStock(order.OrderItems);
-
-            if (allOnStock)
-            {
-                order.OrderItems.ToList().ForEach(item =>
-                {
-                    var ingredientId = _unitOfWork.Ingredient.GetId(item.Name);
-                    var ingredient = new IngredientDto { Id = ingredientId, ReorderQuantity = item.Quantity };
-
-                    _unitOfWork.Ingredient.ReduceStockUnits(
-                        new IngredientDto { Id = ingredientId, ReorderQuantity = item.Quantity }
-                     );
-                });
-                return Ok();
-            }
-            else
-            {
-                return BadRequest("The order cannot be processed as some ingredients are out of stock.");
-            }
+            return _unitOfWork.Ingredient.ConsumeIngredients(order.OrderItems);
         }
     }
 }
