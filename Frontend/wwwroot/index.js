@@ -116,5 +116,5 @@ const bulkReorder = async () => {
 }
 
 window.onload = async () => {
-    setTimeout(await getIngredients, 1000);
+    setTimeout(await getIngredients, 100);
 }
