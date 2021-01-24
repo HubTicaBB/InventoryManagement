@@ -17,7 +17,7 @@ const display = (data) => {
         let row = tbody.insertRow();
         row.insertCell(0).innerHTML = item.id;
 
-        let nameCell = row.insertCell(1); row.insertCell(1);
+        let nameCell = row.insertCell(1);
         nameCell.id = item.name;
         nameCell.innerHTML = item.name;
 
