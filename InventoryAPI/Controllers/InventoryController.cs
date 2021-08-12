@@ -19,29 +19,25 @@ namespace InventoryAPI.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var ingredients = _ingredientRepository.GetAll();
-            return Ok(ingredients);
+            return Ok(_ingredientRepository.GetAll());
         }
 
         [HttpPut]
         public IActionResult IncreaseQuantity(IngredientDto ingredient)
         {
-            var actionResult = _ingredientRepository.PlaceManualOrder(ingredient);
-            return actionResult;
+            return _ingredientRepository.PlaceManualOrder(ingredient);
         }           
 
         [HttpPut("bulk")]
         public IActionResult IncreaseMultipleQuantity()
         {
-            var actionResult = _ingredientRepository.PlaceBulkOrder();
-            return actionResult;
+            return _ingredientRepository.PlaceBulkOrder();
         }
 
         [HttpPut("consume")]
         public IActionResult DecreaseQuantity(OrderDto order)
         {
-            var actionResult = _ingredientRepository.ConsumeIngredients(order.OrderItems);
-            return actionResult;
+            return _ingredientRepository.ConsumeIngredients(order.OrderItems);
         }
     }
 }
